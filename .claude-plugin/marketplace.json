@@ -1,0 +1,28 @@
+{
+  "name": "shopware-plugins",
+  "owner": {
+    "name": "Shopware",
+    "email": "info@shopware.com",
+    "url": "https://www.shopware.com"
+  },
+  "metadata": {
+    "description": "Collection of Claude Code plugins for Shopware development",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "comment-reviewing",
+      "description": "Reviews and improves code comments following 'why not what' principle. Removes redundant and obvious comments, improves vague comments by adding context, condenses verbose documentation, and flags inconsistencies. Use when reviewing comments in files, directories, git changes, git diffs, commits, or commit ranges. Handles all comment styles: C-style (//, /* */), PHPDoc, JSDoc, Python (#), HTML, Twig, SQL.",
+      "source": "./plugins/code-quality/comment-reviewing",
+      "category": "code-quality",
+      "version": "1.0.0",
+      "author": {
+        "name": "Martin Bens"
+      },
+      "license": "MIT",
+      "keywords": ["comments", "code-quality", "documentation", "review", "refactoring"],
+      "skills": ["./skills/comment-reviewing"],
+      "strict": false
+    }
+  ]
+}
