@@ -1,0 +1,45 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux
+*~
+
+# IDE and Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+.project
+.classpath
+.settings/
+*.sublime-project
+*.sublime-workspace
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Temporary files and logs
+*.tmp
+*.temp
+*.bak
+*.log
+logs/
+tmp/
+temp/
+
+# Claude Code local files
+CLAUDE.md
+CLAUDE.local.md
+AGENTS.local.md
