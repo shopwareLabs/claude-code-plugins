@@ -21,8 +21,13 @@
       },
       "license": "MIT",
       "keywords": ["comments", "code-quality", "documentation", "review", "refactoring"],
-      "skills": ["./skills/comment-reviewing"],
-      "strict": false
+      "strict": false,
+      "commands": [
+        "./commands/comment-check.md",
+        "./commands/comment-review.md",
+        "./commands/comment-review-git.md"
+      ],
+      "skills": ["./skills/comment-reviewing"]
     }
   ]
 }

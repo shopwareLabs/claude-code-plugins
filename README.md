@@ -16,7 +16,7 @@ Add this marketplace to your Claude Code installation:
 
 ### comment-reviewing (v1.0.0)
 
-Expert at reviewing and improving code comments following the "why not what" principle. Provides slash commands (`/comment-review`, `/comment-review-git`, `/comment-check`) and a skill for model invocation. See [documentation](./plugins/code-quality/comment-reviewing/README.md) for details.
+Expert at reviewing and improving code comments following the "why not what" principle. Provides slash commands and a skill for model invocation. See [documentation](./plugins/code-quality/comment-reviewing/README.md) for details.
 
 ```bash
 /plugin install comment-reviewing@shopware-plugins

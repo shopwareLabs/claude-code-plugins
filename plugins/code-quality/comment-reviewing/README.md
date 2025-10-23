@@ -17,6 +17,60 @@ Comments should NOT explain:
 
 ## Quick Start
 
+### Slash Commands (Recommended)
+
+The plugin provides two slash commands with smart argument parsing:
+
+**`/comment-review [scope]`** - Review and improve comments (makes edits)
+
+Automatically detects scope from arguments:
+```bash
+# Files and directories
+/comment-review                          # Review current directory (recursive)
+/comment-review src/Service/             # Review specific directory
+/comment-review src/UserService.php      # Review specific file
+
+# Git changes
+/comment-review --git                    # Review staged/unstaged changes vs main
+
+# Single commit
+/comment-review HEAD                     # Review last commit
+/comment-review abc123f                  # Review specific commit
+
+# Commit range
+/comment-review HEAD~5..HEAD             # Review last 5 commits
+/comment-review main..feature            # Review feature branch changes
+
+# Commit list (space-separated)
+/comment-review abc123 def456 ghi789     # Review specific commits
+```
+
+**`/comment-check [scope]`** - Analyze comment quality (read-only, no edits)
+
+Same scope detection, but won't make any changes:
+```bash
+# Files and directories
+/comment-check                           # Check current directory
+/comment-check src/                      # Check specific directory
+
+# Git commits
+/comment-check HEAD                      # Analyze last commit
+/comment-check HEAD~4..HEAD              # Analyze last 5 commits
+/comment-check main..feature             # Analyze feature branch
+/comment-check abc123 def456             # Analyze specific commits
+```
+
+**Scope Detection:** Both commands use smart argument parsing to automatically detect:
+- Empty → current directory (recursive)
+- Contains `..` → commit range
+- Matches commit patterns (HEAD*, sha1, branches) → git commits
+- Contains `/` or exists as path → file/directory
+- `--git` flag → working directory changes
+
+### Natural Language (Alternative)
+
+You can also invoke the skill with natural language:
+
 **Review a directory:**
 ```
 Review comments in src/services/

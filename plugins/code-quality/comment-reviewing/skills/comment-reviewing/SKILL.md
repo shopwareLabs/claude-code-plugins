@@ -42,8 +42,14 @@ bash -c "source scripts/git-helpers.sh && detect_main_branch"
 # Validate commit reference
 bash -c "source scripts/git-helpers.sh && validate_commit HEAD~3"
 
-# Get changed files for a commit
+# Get changed files for a single commit
 bash -c "source scripts/git-helpers.sh && get_changed_files commit abc123"
+
+# Get changed files for a commit range
+bash -c "source scripts/git-helpers.sh && get_changed_files commit-range main HEAD"
+
+# Get changed files for a commit list (space-separated)
+bash -c "source scripts/git-helpers.sh && get_changed_files commit-list 'abc123 def456 ghi789'"
 ```
 
 **validate-edit.sh** - Pre-edit validation
