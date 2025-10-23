@@ -100,8 +100,30 @@ get_changed_files() {
             fi
             ;;
 
+        commit-list)
+            # List of commits - get all unique files changed across all commits
+            local commits=($ref1)  # Split space-separated list into array
+            local all_files=()
+
+            for commit in "${commits[@]}"; do
+                # Validate commit
+                if ! validate_commit "$commit" >/dev/null 2>&1; then
+                    echo "ERROR: Invalid commit in list: $commit" >&2
+                    return 1
+                fi
+
+                # Get files for this commit and add to array
+                while IFS= read -r file; do
+                    all_files+=("$file")
+                done < <(git diff-tree --no-commit-id --name-only -r "$commit" 2>/dev/null)
+            done
+
+            # Deduplicate and output
+            printf '%s\n' "${all_files[@]}" | sort -u
+            ;;
+
         *)
-            echo "ERROR: Unknown scope type: $scope_type. Use 'branch', 'commit', or 'commit-range'" >&2
+            echo "ERROR: Unknown scope type: $scope_type. Use 'branch', 'commit', 'commit-range', or 'commit-list'" >&2
             return 1
             ;;
     esac
@@ -150,8 +172,27 @@ get_diff_content() {
             fi
             ;;
 
+        commit-list)
+            # List of commits - show changes for each commit
+            local commits=($ref1)  # Split space-separated list into array
+
+            for commit in "${commits[@]}"; do
+                # Validate commit
+                if ! validate_commit "$commit" >/dev/null 2>&1; then
+                    echo "ERROR: Invalid commit in list: $commit" >&2
+                    return 1
+                fi
+
+                # Show changes for this commit
+                if ! git show "$commit" 2>/dev/null; then
+                    echo "ERROR: Failed to get diff for commit: $commit" >&2
+                    return 1
+                fi
+            done
+            ;;
+
         *)
-            echo "ERROR: Unknown scope type: $scope_type. Use 'branch', 'commit', or 'commit-range'" >&2
+            echo "ERROR: Unknown scope type: $scope_type. Use 'branch', 'commit', 'commit-range', or 'commit-list'" >&2
             return 1
             ;;
     esac
