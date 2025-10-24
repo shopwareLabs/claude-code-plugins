@@ -1,0 +1,112 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://docs.claude.com/schemas/marketplace.json",
+  "title": "Claude Code Plugin Marketplace Schema",
+  "description": "Schema for Claude Code plugin marketplace.json configuration file",
+  "type": "object",
+  "required": ["name", "owner", "plugins"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Unique marketplace identifier in kebab-case",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "owner": {
+      "type": "object",
+      "description": "Marketplace owner/maintainer information",
+      "required": ["name"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Owner or organization name"
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "Contact email address"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "Owner or organization website URL"
+        }
+      }
+    },
+    "plugins": {
+      "type": "array",
+      "description": "Array of plugin definitions available in this marketplace",
+      "items": {
+        "$ref": "#/definitions/plugin"
+      }
+    }
+  },
+  "definitions": {
+    "plugin": {
+      "type": "object",
+      "required": ["name", "source"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Plugin name in kebab-case without spaces",
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "source": {
+          "type": "string",
+          "description": "Relative path to plugin directory (must start with ./)",
+          "pattern": "^\\.\\/.*"
+        },
+        "description": {
+          "type": "string",
+          "description": "Brief description of plugin functionality"
+        },
+        "version": {
+          "type": "string",
+          "description": "Plugin version following semantic versioning",
+          "pattern": "^\\d+\\.\\d+\\.\\d+(-[a-zA-Z0-9.-]+)?(\\+[a-zA-Z0-9.-]+)?$"
+        },
+        "author": {
+          "type": "object",
+          "description": "Plugin author information",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Author name"
+            },
+            "email": {
+              "type": "string",
+              "format": "email",
+              "description": "Author email address"
+            },
+            "url": {
+              "type": "string",
+              "format": "uri",
+              "description": "Author website URL"
+            }
+          }
+        },
+        "homepage": {
+          "type": "string",
+          "format": "uri",
+          "description": "Plugin documentation or homepage URL"
+        },
+        "repository": {
+          "type": "string",
+          "description": "Source code repository URL or identifier",
+          "examples": ["https://github.com/user/plugin", "github:user/plugin"]
+        },
+        "license": {
+          "type": "string",
+          "description": "SPDX license identifier or license name",
+          "examples": ["MIT", "Apache-2.0", "GPL-3.0"]
+        },
+        "keywords": {
+          "type": "array",
+          "description": "Tags for plugin discovery and categorization",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
