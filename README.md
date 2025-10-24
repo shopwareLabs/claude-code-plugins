@@ -1,6 +1,6 @@
 # Shopware Claude Code Plugins
 
-A curated collection of Claude Code plugins for Shopware development. Supports all plugin types: commands, agents, skills, hooks, and MCP servers.
+Claude Code plugins for Shopware development. Supports all plugin types: commands, agents, skills, hooks, and MCP servers.
 
 ## Quick Start
 
@@ -16,7 +16,7 @@ Add this marketplace to your Claude Code installation:
 
 ### comment-reviewing (v1.0.0)
 
-Expert at reviewing and improving code comments following the "why not what" principle. Provides slash commands and a skill for model invocation. See [documentation](./plugins/code-quality/comment-reviewing/README.md) for details.
+Reviews and improves code comments, focusing on explaining reasoning rather than restating code. Provides slash commands and a skill for model invocation. See [documentation](./plugins/code-quality/comment-reviewing/README.md) for details.
 
 ```bash
 /plugin install comment-reviewing@shopware-plugins

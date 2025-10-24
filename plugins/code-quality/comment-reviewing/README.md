@@ -1,8 +1,8 @@
 # Comment Reviewing
 
-Automated code comment review skill for Claude Code that identifies and fixes redundant, obvious, or misleading comments while preserving valuable documentation.
+Code comment review skill for Claude Code. Identifies and removes redundant or misleading comments while preserving valuable documentation.
 
-## Core Philosophy: "Why" Not "What"
+## "Why" Not "What"
 
 Comments should explain:
 - **Why** a decision was made
@@ -19,7 +19,7 @@ Comments should NOT explain:
 
 ### Slash Commands (Recommended)
 
-The plugin provides two slash commands with smart argument parsing:
+Two slash commands are available:
 
 **`/comment-review [scope]`** - Review and improve comments (makes edits)
 
@@ -69,7 +69,7 @@ Same scope detection, but won't make any changes:
 
 ### Natural Language (Alternative)
 
-You can also invoke the skill with natural language:
+Alternatively, use natural language:
 
 **Review a directory:**
 ```
@@ -88,7 +88,7 @@ Fix redundant comments in UserService.php
 
 ## Project-Specific Configuration
 
-Customize the skill for your project's needs using a `.reviewrc.md` configuration file:
+Customize behavior using a `.reviewrc.md` configuration file:
 
 ```yaml
 ---
@@ -120,9 +120,9 @@ exemption_markers:
 - Quick start template: `skills/comment-reviewing/reviewrc-template.md`
 - Complete guide: `skills/comment-reviewing/references/configuration-guide.md`
 
-Configuration is optional - the skill works great without it!
+Configuration is optional.
 
-## What This Skill Does
+## Functionality
 
 ### Removes Redundant Comments
 - Comments that state the obvious: `// Get user by ID`
@@ -131,13 +131,11 @@ Configuration is optional - the skill works great without it!
 - Empty comments: `//` or `// ----`
 
 ### Improves Vague Comments
-Makes generic comments specific with context:
 - `// Process data` → `// Sanitize HTML to prevent XSS attacks per OWASP guidelines`
 - `// Validate input` → `// Ensure amount doesn't exceed $10,000 per business rule BR-2019`
 - `// Edge case test` → `// Regression test for bug #1234: null user ID caused NPE`
 
 ### Condenses Verbose Comments
-Shortens wordy comments while preserving valuable "why" content:
 - **Implementation comments** - Removes redundant phrasing while keeping the reasoning
 - **API documentation** - Makes concise by removing implementation details and obvious parameter descriptions
 
@@ -146,7 +144,6 @@ Examples:
 - Verbose API doc: 15-line PHPDoc listing all pipeline phases → Brief purpose + vital constraints only
 
 ### Flags Inconsistent Comments
-Detects code-comment inconsistencies requiring human verification:
 - Comments contradicting function names or behavior
 - Return value mismatches
 - TODO/FIXME without owner or ticket reference
@@ -163,7 +160,7 @@ Detects code-comment inconsistencies requiring human verification:
 
 ## Supported Languages
 
-Works with all common comment styles:
+Supports:
 - `//` and `/* */` - JavaScript, TypeScript, Java, C++, PHP, Go, Rust, Swift, Kotlin
 - `#` - Python, Ruby, Shell, YAML
 - `<!-- -->` - HTML, XML, Markdown
