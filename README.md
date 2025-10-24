@@ -9,7 +9,7 @@ For detailed information about using marketplaces, see the [official Claude Code
 Add this marketplace to your Claude Code installation:
 
 ```bash
-/plugin marketplace add shopware/claude-code-plugins
+/plugin marketplace add shopwareLabs/claude-code-plugins
 ```
 
 ## Available Plugins
