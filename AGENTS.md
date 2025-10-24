@@ -32,12 +32,6 @@ The marketplace configuration follows the official Claude Code marketplace schem
 - `homepage` - Documentation URL
 - `repository` - Source code repository URL
 
-### Key Technical Details
-
-- **`strict: false`**: Plugin metadata lives entirely in marketplace.json, no `plugin.json` required
-- **Relative paths**: Must start with `./` from marketplace root
-- **Component locations**: All component files (commands/, agents/, skills/, hooks/, .mcp.json) live at plugin root, not in `.claude-plugin/`
-
 ## Plugin Component Types
 
 Claude Code plugins can include any combination of these components:
@@ -72,18 +66,17 @@ Example: `plugins/code-quality/comment-reviewing/skills/comment-reviewing/SKILL.
    - `hooks/` - Event handlers (hooks.json)
    - `.mcp.json` - MCP server configuration
 3. **Update marketplace.json**:
-   - Add entry to `plugins` array
-   - Set `source` to relative path
-   - Set `strict: false` if no plugin.json needed
-   - Specify component paths (commands, agents, skills, hooks, mcpServers)
+   - Add entry to `plugins` array with required fields: `name`, `source`
+   - Set `source` to relative path starting with `./`
+   - Add recommended fields: `description`, `version`, `author`, `license`, `keywords`, `repository`
 4. **Update README.md**: Add to "Available Plugins" section
 5. **Validate**: `claude plugin validate .`
 
 ### Version Management
 
-- Marketplace version: `.metadata.version` (overall catalog)
-- Plugin versions: Individual `version` in plugin entries
-- Bump both when making breaking changes
+- Plugin versions: Individual `version` field in plugin entries
+- Follow semantic versioning (e.g., "1.0.0", "2.1.3")
+- Bump versions when releasing updates or breaking changes
 
 ## Testing & Validation
 
@@ -98,9 +91,8 @@ claude plugin validate .
 
 ### Pre-release Checklist
 - [ ] `claude plugin validate .` passes
-- [ ] All plugin versions updated
+- [ ] All plugin versions updated in marketplace.json
 - [ ] README.md "Available Plugins" section current
-- [ ] marketplace.json metadata.version bumped if needed
 
 ## Distribution
 
