@@ -14,34 +14,23 @@ plugins/
 
 ### marketplace.json Schema
 
-```json
-{
-  "name": "marketplace-name",           // Kebab-case identifier
-  "owner": { "name", "email", "url" },  // Maintainer info
-  "metadata": {
-    "description": "...",               // Brief overview
-    "version": "1.0.0"                  // Marketplace version
-  },
-  "plugins": [
-    {
-      "name": "plugin-name",            // Required
-      "source": "./plugins/path",       // Required: relative path
-      "description": "...",             // Recommended
-      "version": "1.0.0",               // Plugin version
-      "category": "code-quality",       // Organization tag
-      "strict": false,                  // If true, requires plugin.json
-      // Component paths (specify which components this plugin provides):
-      "commands": "commands/",          // Custom slash commands
-      "agents": "agents/",              // Specialized agents
-      "skills": ["skill-name"],         // Model-invoked skills
-      "hooks": "hooks/",                // Event handlers
-      "mcpServers": ".mcp.json",        // MCP server configuration
-      // Optional metadata:
-      "author", "license", "keywords", "homepage", "repository"
-    }
-  ]
-}
-```
+The marketplace configuration follows the official Claude Code marketplace schema. See [docs/marketplace-schema.json](../docs/marketplace-schema.json) for the complete JSON Schema definition.
+
+**Required fields:**
+- `name` - Marketplace identifier in kebab-case
+- `owner` - Object with at least `name` property (optionally `email`, `url`)
+- `plugins` - Array of plugin definitions
+
+**Plugin object structure:**
+- `name` (required) - Plugin identifier in kebab-case
+- `source` (required) - Relative path starting with `./`
+- `description` - Brief description of functionality
+- `version` - Semantic version string
+- `author` - Object with `name`, optionally `email` and `url`
+- `license` - SPDX license identifier (e.g., "MIT", "Apache-2.0")
+- `keywords` - Array of tags for discovery
+- `homepage` - Documentation URL
+- `repository` - Source code repository URL
 
 ### Key Technical Details
 
