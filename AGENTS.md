@@ -86,7 +86,7 @@ Example: `plugins/code-quality/comment-reviewing/skills/comment-reviewing/SKILL.
 claude plugin validate .
 
 # Test locally before publishing
-/plugin marketplace add /path/to/claude-code-plugin-marketplace
+/plugin marketplace add /path/to/claude-code-plugins
 ```
 
 ### Pre-release Checklist
