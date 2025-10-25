@@ -14,12 +14,12 @@ Add this marketplace to your Claude Code installation:
 
 ## Available Plugins
 
-### comment-reviewing (v1.0.0)
+### comment-review (v1.0.0)
 
-Reviews and improves code comments, focusing on explaining reasoning rather than restating code. Provides slash commands and a skill for model invocation. See [documentation](./plugins/code-quality/comment-reviewing/README.md) for details.
+Reviews and improves code comments, focusing on explaining reasoning rather than restating code. Provides slash commands and a skill for model invocation. See [documentation](./plugins/code-quality/comment-review/README.md) for details.
 
 ```bash
-/plugin install comment-reviewing@shopware-plugins
+/plugin install comment-review@shopware-plugins
 ```
 
 **Commands:**
