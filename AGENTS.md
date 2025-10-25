@@ -52,7 +52,7 @@ plugin-root/
         └── SKILL.md
 ```
 
-Example: `plugins/code-quality/comment-reviewing/skills/comment-reviewing/SKILL.md`
+Example: `plugins/code-quality/comment-review/skills/comment-reviewing/SKILL.md`
 
 ## Development Workflow
 
