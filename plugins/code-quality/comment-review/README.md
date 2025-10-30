@@ -118,7 +118,7 @@ exemption_markers:
 
 **Documentation:**
 - Quick start template: `skills/comment-reviewing/reviewrc-template.md`
-- Complete guide: `skills/comment-reviewing/references/configuration-guide.md`
+- Complete guide: `skills/comment-reviewing/references/config-overview.md`
 
 Configuration is optional.
 

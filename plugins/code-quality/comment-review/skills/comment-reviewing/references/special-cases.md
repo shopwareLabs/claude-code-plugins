@@ -266,7 +266,7 @@ Deprecation documentation should include:
 ## Class and Method Documentation
 
 For detailed guidance on reviewing API documentation (PHPDoc, JSDoc, JavaDoc, etc.), see:
-**`api-documentation-guidelines.md`**
+**`api-docs-core-principles.md`**
 
 ### Quick Rules
 

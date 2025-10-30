@@ -72,11 +72,11 @@ Detect type before categorizing:
 **API Documentation**
 - Contract documentation identified by position before declarations, structured tags (@param/@return), doc syntax (/** */ or docstrings), and multi-line parameter descriptions
 - Treatment: CONDENSE if verbose (brief purpose + vital non-obvious info only)
-- See references/api-documentation-guidelines.md for detailed detection criteria and examples
+- See references/api-docs-core-principles.md for detailed detection criteria and examples
 
 **Visibility Rule**: Private methods with structured docs (`/** */` with `@param`/`@return`) are implementation explanations, not API contracts—apply implementation comment rules (WHY not WHAT, remove if obvious). Public/protected methods with structured docs are API contracts—apply API documentation rules (condense if verbose).
 
-**Load `references/api-documentation-guidelines.md` for detailed examples when encountering API documentation or uncertain about visibility rules**
+**Load `references/api-docs-core-principles.md` for detailed examples when encountering API documentation or uncertain about visibility rules**
 
 ## Rules for Removal
 
@@ -103,7 +103,7 @@ Condense comments with redundant explanations or verbose phrasing while preservi
 ## Rules for Condensation (API Documentation)
 
 Condense API documentation that describe implementation rather than contract, restate obvious parameters/types, or exhaustively list options. Focus on capabilities and guarantees.
-**For detailed contract vs implementation examples, see `references/api-documentation-guidelines.md`**
+**For detailed contract vs implementation examples, see `references/api-docs-core-principles.md`**
 
 ## Rules for Preservation
 
@@ -178,7 +178,7 @@ Do not load all references at once. Load them individually as specific needs ari
 - **Read-only mode:** Report without edits (when user requests analysis only)
 - **Interactive mode:** Show proposed changes and wait for confirmation before applying
 - **Large scope:** Process in batches when overwhelming (prevents context overflow, enables incremental progress), prioritize high-impact files
-- **Complex changes:** Load relevant references early (api-documentation-guidelines.md, implementation-comment-condensation.md)
+- **Complex changes:** Load relevant references early (api-docs-core-principles.md, implementation-comment-condensation.md)
 
 ### Quality Assurance Checkpoints
 

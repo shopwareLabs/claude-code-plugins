@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.0.1] - 2025-10-30
+
+### Fixed
+- Corrected broken internal documentation links that referenced non-existent files (configuration-guide.md → config-overview.md, api-documentation-guidelines.md → api-docs-core-principles.md)
+
 ## [1.0.0] - 2025-10-22
 
 Initial release.
