@@ -2,6 +2,14 @@
 
 # Shopware Claude Code Plugin Marketplace - Technical Reference
 
+## Understanding Skills
+
+**Skills are executable code, not documentation.** Markdown files in `skills/[skill-name]/` directories (SKILL.md, references/*.md) are instruction files that Claude Code reads and executes. Modifying these files changes the skill's behavior directly - treat them as you would Python or JavaScript code.
+
+## Understanding Slash Commands
+
+**Slash commands are executable code, not documentation.** Markdown files in `commands/` directories are instruction files that Claude Code reads and executes when users invoke the command. Modifying these files changes what happens when users run the slash command.
+
 ## Marketplace Architecture
 
 ### Structure
