@@ -1,6 +1,6 @@
 ---
 name: comment-reviewing
-description: Reviews and improves code comments following 'why not what' principle. Removes redundant and obvious comments, improves vague comments by adding context, condenses verbose documentation, and flags inconsistencies. Use when reviewing comments in files, directories, git changes, git diffs, commits, or commit ranges. Handles all comment styles: C-style (//, /* */), PHPDoc, JSDoc, Python (#), HTML, Twig, SQL.
+description: Reviews and improves code comments following 'why not what' principle. Removes redundant and obvious comments, improves vague comments by adding context, condenses verbose documentation, and flags inconsistencies. Evaluates uncertainty of automated changes and identifies edits requiring manual verification with actionable prompts. Use when reviewing comments in files, directories, git changes, git diffs, commits, or commit ranges. Handles all comment styles: C-style (//, /* */), PHPDoc, JSDoc, Python (#), HTML, Twig, SQL.
 allowed-tools: Read, Edit, Glob, Grep, Bash, TodoWrite
 ---
 
@@ -90,6 +90,58 @@ Remove obvious, redundant, or trivial comments that restate code without adding 
 Flag comments for human verification when inconsistent with code (behavior, return values, function names, exception handling) or incomplete (TODO/FIXME without owner/ticket, temporal markers like "will"/"soon").
 **For detailed patterns and examples, see `references/consistency-checking.md`**
 
+## Rules for Uncertainty Evaluation
+
+During review, evaluate uncertainty for each change made to identify changes requiring manual verification. Classify each change as HIGH, MEDIUM, or LOW uncertainty based on risk of removing valuable information. Track HIGH/MEDIUM items for the "Changes Requiring Verification" section in the final report.
+
+### Lightweight Classification (No Reference Load)
+
+Before loading uncertainty-patterns.md, apply quick heuristics to each change using content signal detection:
+
+**Likely HIGH uncertainty (requires reference load for detailed evaluation)**:
+- File in conservative_paths AND change is substantive (not just typo/formatting)
+- Removed examples from interface/abstract class documentation
+  - Content signals: "Examples:", "e.g.,", "like", quoted patterns
+- Removed architectural pattern explanations
+  - Pattern names: Factory, Strategy, DI, Observer, Singleton, etc.
+- Substantially reduced WHY comments on complex algorithms containing:
+  - Causal language: `because`, `due to`, `since`, `prevents`, `avoids`
+  - Complexity notation: `O(n)`, `O(log n)`, `O(n²)`
+  - Trade-off descriptions: `faster but`, `memory vs speed`, `X vs Y`
+  - Anti-pattern warnings, performance requirements
+- Changed framework/library-specific behavior comments
+  - ORM terms: `lazy load`, `eager load`, `hydration`, `cascade`
+  - SQL terms: `ORDER BY`, `NULL first`, `JOIN`, `HAVING`
+  - Framework APIs: routing, middleware, lifecycle
+- Removed naming conventions, format specifications, or transformation rules
+
+**Likely MEDIUM uncertainty (requires reference load for detailed evaluation)**:
+- Removed @param descriptions with constraint keywords: `must`, `cannot`, `only`, `if`, `when`
+- Substantive change to comment in complex code with content signals:
+  - Specific numbers, thresholds, limits
+  - Concrete examples or patterns
+  - External references: `RFC`, `bug #`, `issue #`, `JIRA-`, standards
+  - Constraint language: `must`, `cannot`, `only`, `required`, `never`
+  - Rationale language: `because`, `prevents`, `due to`, `enables`
+  - Trade-off descriptions: `but`, `however`, `X vs Y`
+- Minimal comments remaining on complex logic
+- Changed domain-specific terminology (domain_terms config)
+
+**Confirmed LOW uncertainty (no reference load needed)**:
+- Fixing typos or grammar only (even in conservative_paths)
+- Removing obviously redundant comments ("// Get user" above getUserById())
+- Formatting-only changes (line breaks, indentation)
+- Comments that literally restate method names
+- Condensation with all meaning preserved (only filler words removed)
+
+**When potential HIGH/MEDIUM pattern detected**, load `references/uncertainty-patterns.md` for:
+- Complete pattern definitions with detailed examples
+- Content signal keyword library (7 information types)
+- Verification prompt templates and generation guidance
+- Decision guidance for edge cases
+
+**For each HIGH/MEDIUM item, track:** file, line range, change description, uncertainty reason, specific verification prompt
+
 ## Rules for Improvement
 
 **Applies to: Implementation comments only (NOT API documentation)**
@@ -130,6 +182,9 @@ Load detailed reference files using the Read tool ONLY when needed:
 
 **When checking code-comment consistency or flagging inconsistencies**, load:
 `references/consistency-checking.md`
+
+**When potential HIGH/MEDIUM uncertainty pattern detected**, load:
+`references/uncertainty-patterns.md` - For complete decision tree, detailed classification patterns, and verification prompt templates
 
 **When handling legacy code, algorithms, or generated files**, load:
 `references/special-cases.md`
@@ -202,10 +257,19 @@ Do not load all references at once. Load them individually as specific needs ari
 - Categorize: Remove (obvious), Improve (vague), CONDENSE (verbose), Preserve (valuable), FLAG (inconsistent)
 - Verify consistency: comment matches function name, return value, parameters, behavior, ticket_format
 
+**Uncertainty Evaluation**
+- For each change, apply lightweight classification heuristics (see Rules for Uncertainty Evaluation)
+- If potential HIGH/MEDIUM pattern detected: load `references/uncertainty-patterns.md` for detailed evaluation
+- For confirmed HIGH/MEDIUM items: generate specific verification prompt using templates from reference
+- Track uncertainty items for "Changes Requiring Verification" section in report
+
 **Pre-Edit Review**
-- Count changes by category
+- Count changes by category (Remove/Improve/Condense/Preserve/Flag)
+- Count uncertainty items by level (HIGH/MEDIUM)
 - Identify flagged comments (do NOT auto-remove)
-- Request confirmation if user intent unclear or changes extensive
+- If accumulating multiple HIGH uncertainty items OR changes feel extensive for scope: consider previewing and requesting confirmation
+- Goal: catch potentially problematic batches early without over-interrupting
+- Show summary including uncertainty: "5 changes (2 need verification)"
 - Extra caution in conservative_paths files
 
 **Edit Operations**
@@ -292,6 +356,31 @@ Adapt output verbosity based on scope size and user intent to balance transparen
 
 **For complete format templates, selection guidance, and examples, see `references/output-formats.md`**
 
+#### Changes Requiring Verification Section
+
+Include a "Changes Requiring Verification ⚠️" section in the report when HIGH or MEDIUM uncertainty items exist. This section appears after "Files Reviewed" and before "Summary".
+
+**Format:**
+```markdown
+### Changes Requiring Verification ⚠️
+
+#### High Priority - Please Review
+1. **[Filename]:[line-range]**
+   - **Change**: [concise description of what was changed]
+   - **Uncertainty**: [why manual verification needed]
+   - **Verify**: [specific actionable check for user]
+
+#### Medium Priority - Optional
+[same format as High Priority]
+```
+
+**Verbosity adaptation:**
+- **Verbose**: Full details with examples and context for each item
+- **Standard**: Structured list with change/uncertainty/verify for each item
+- **Concise**: Summary counts only ("3 High Priority items across 2 files - see file summaries")
+
+**Omit this section entirely** if no HIGH or MEDIUM uncertainty items detected (only LOW uncertainty = routine changes).
+
 #### Standard Format Example
 
 ```markdown
@@ -307,6 +396,14 @@ Loaded from .reviewrc.md (3 ignore paths, 2 preserve patterns)
 - Line 67: Improved "// Process data" → "// Sanitize HTML to prevent XSS" (vague implementation comment)
 - Line 102: PRESERVED "// Workaround for bug #4521" (important context)
 - Line 120: FLAGGED "// Returns full name" but function get_email() returns email (inconsistent)
+
+### Changes Requiring Verification ⚠️
+
+#### High Priority - Please Review
+1. **ContentLayoutInterface.php:25-40**
+   - **Change**: Removed concrete examples ('productId', 'categoryId', 'landingPageId') from interface method documentation
+   - **Uncertainty**: Examples might serve as implementation guidance for developers creating new entity adapters
+   - **Verify**: Are these naming patterns documented elsewhere? Check if new implementations need this guidance.
 
 ### Summary
 - Removed: 2 redundant comments

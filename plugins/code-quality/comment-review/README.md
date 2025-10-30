@@ -1,6 +1,6 @@
 # Comment Reviewing
 
-Code comment review skill for Claude Code. Identifies and removes redundant or misleading comments while preserving valuable documentation.
+Code comment review skill for Claude Code. Identifies and removes redundant or misleading comments while preserving valuable documentation. Automatically evaluates uncertainty of automated changes and prompts for manual verification when needed.
 
 ## "Why" Not "What"
 
@@ -158,6 +158,13 @@ Examples:
 - TODO/FIXME with owner and timeline
 - Design decisions and trade-offs
 
+### Evaluates Uncertainty of Automated Changes
+- Identifies changes that require manual verification before committing
+- Classifies uncertainty as HIGH/MEDIUM/LOW based on risk of removing valuable information
+- Detects 7 content signal types: references, constraints, examples, rationale, trade-offs, behavior, context
+- Provides actionable verification prompts for each flagged change
+- Two-stage evaluation (lightweight heuristics, then pattern analysis) minimizes overhead
+
 ## Supported Languages
 
 Supports:
@@ -183,12 +190,27 @@ Supports:
 - Line 112: KEPT "// Workaround for MySQL bug #4521" (important context)
 - Line 134: CONDENSED PHPDoc from 12 lines → brief purpose + vital info only
 
+### Changes Requiring Verification ⚠️
+
+#### High Priority
+1. **ContentLayoutInterface.php:25-40**
+   - **Change**: Removed concrete examples ('productId', 'categoryId', 'landingPageId') from interface docs
+   - **Uncertainty**: Examples might guide developers creating new entity adapters
+   - **Verify**: Are these naming patterns documented elsewhere? Check if implementations need this guidance.
+
+#### Medium Priority
+2. **CacheService.php:78**
+   - **Change**: Condensed algorithm comment from "Uses LRU eviction strategy. Items accessed recently stay in cache longer, improving hit rate for hot data" → "Uses LRU eviction strategy"
+   - **Uncertainty**: Performance rationale might be valuable for cache tuning decisions
+   - **Verify**: Is the hit rate optimization documented in cache configuration docs?
+
 ### Summary
 - Removed: 2 redundant comments
 - Improved: 1 vague comment
 - Condensed: 2 verbose comments (1 implementation, 1 API doc)
 - Flagged: 1 comment requiring verification
 - Kept: 2 valuable comments
+- Changes requiring verification: 2 (1 HIGH, 1 MEDIUM)
 
 ### Flagged Comments Requiring Attention
 1. **UserService.php:56** - TODO missing owner and ticket - suggest: `TODO(name): specific action - TICKET-XXX`

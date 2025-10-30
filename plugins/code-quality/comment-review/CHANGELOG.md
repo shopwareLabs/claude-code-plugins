@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.1.0] - 2025-10-30
+
+### Added
+- Uncertainty evaluation mechanism with HIGH/MEDIUM/LOW classification using content signal detection (examples, constraints, rationale, trade-offs) and progressive disclosure
+- "Changes Requiring Verification" section in report output with actionable verification prompts
+- uncertainty-patterns.md reference file with pattern definitions, content signal library, and verification templates
+
+### Changed
+- Integrated uncertainty evaluation into skill description, pre-edit review workflow, and change tracking
+- Enhanced output format to include verification section with adaptive verbosity
+
+### Performance
+- Two-stage evaluation (lightweight heuristics, then full patterns only when HIGH/MEDIUM detected) reduces token overhead for simple reviews
+
 ## [1.0.1] - 2025-10-30
 
 ### Fixed
