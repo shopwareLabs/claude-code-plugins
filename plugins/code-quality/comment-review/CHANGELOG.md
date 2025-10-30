@@ -4,6 +4,7 @@
 
 ### Fixed
 - Corrected broken internal documentation links that referenced non-existent files (configuration-guide.md → config-overview.md, api-documentation-guidelines.md → api-docs-core-principles.md)
+- Fixed git command execution in wrong directory by using git -C with WORK_DIR variable in git-helpers.sh
 
 ## [1.0.0] - 2025-10-22
 

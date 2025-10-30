@@ -29,27 +29,29 @@ This skill includes bash utility scripts for reliable git operations and edit va
 
 **Invocation pattern:**
 ```bash
-bash -c "source scripts/script-name.sh && function_name arg1 arg2"
+bash -c "WORK_DIR=\$(pwd) && cd /path/to/skill && source scripts/script-name.sh && function_name arg1 arg2"
 ```
+
+**Important:** The `WORK_DIR` variable must be set to the user's project directory before sourcing git-helpers.sh. This ensures git commands execute in the correct repository even when the script is sourced from the plugin installation directory.
 
 **Available scripts:**
 
 **git-helpers.sh** - Git operations with error handling
 ```bash
 # Detect main branch
-bash -c "source scripts/git-helpers.sh && detect_main_branch"
+bash -c "WORK_DIR=\$(pwd) && cd /path/to/skill && source scripts/git-helpers.sh && detect_main_branch"
 
 # Validate commit reference
-bash -c "source scripts/git-helpers.sh && validate_commit HEAD~3"
+bash -c "WORK_DIR=\$(pwd) && cd /path/to/skill && source scripts/git-helpers.sh && validate_commit HEAD~3"
 
 # Get changed files for a single commit
-bash -c "source scripts/git-helpers.sh && get_changed_files commit abc123"
+bash -c "WORK_DIR=\$(pwd) && cd /path/to/skill && source scripts/git-helpers.sh && get_changed_files commit abc123"
 
 # Get changed files for a commit range
-bash -c "source scripts/git-helpers.sh && get_changed_files commit-range main HEAD"
+bash -c "WORK_DIR=\$(pwd) && cd /path/to/skill && source scripts/git-helpers.sh && get_changed_files commit-range main HEAD"
 
 # Get changed files for a commit list (space-separated)
-bash -c "source scripts/git-helpers.sh && get_changed_files commit-list 'abc123 def456 ghi789'"
+bash -c "WORK_DIR=\$(pwd) && cd /path/to/skill && source scripts/git-helpers.sh && get_changed_files commit-list 'abc123 def456 ghi789'"
 ```
 
 **validate-edit.sh** - Pre-edit validation
@@ -249,10 +251,10 @@ If Read tool returns truncation warnings or you encounter token limits:
 - Use `scripts/git-helpers.sh` for reliable git operations with error handling:
   ```bash
   # Example: Detect main branch with fallbacks
-  bash -c "source scripts/git-helpers.sh && detect_main_branch"
+  bash -c "WORK_DIR=\$(pwd) && cd /path/to/skill && source scripts/git-helpers.sh && detect_main_branch"
 
   # Example: Validate commit before processing
-  bash -c "source scripts/git-helpers.sh && validate_commit $commit_ref"
+  bash -c "WORK_DIR=\$(pwd) && cd /path/to/skill && source scripts/git-helpers.sh && validate_commit $commit_ref"
   ```
   Available functions: `check_git_repo`, `validate_commit`, `detect_main_branch`, `get_changed_files`, `get_diff_content`
 - Report specific error (command + stderr output) to user

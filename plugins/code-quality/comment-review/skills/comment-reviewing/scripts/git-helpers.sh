@@ -4,6 +4,11 @@
 
 set -euo pipefail
 
+# Working directory for git operations
+# Set WORK_DIR before sourcing this script to specify where git commands should run
+# Defaults to current directory if not set
+: "${WORK_DIR:=.}"
+
 # Detect the main branch name (main, master, trunk, or custom)
 # Returns: Branch name on stdout
 # Exit code: 0 on success, 1 on error
@@ -11,14 +16,14 @@ detect_main_branch() {
     local main_branch=""
 
     # Try to detect from symbolic-ref (most reliable)
-    if main_branch=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@'); then
+    if main_branch=$(git -C "${WORK_DIR}" symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@'); then
         echo "$main_branch"
         return 0
     fi
 
     # Fallback: Check common branch names
     for branch in main master trunk; do
-        if git rev-parse --verify "origin/$branch" >/dev/null 2>&1; then
+        if git -C "${WORK_DIR}" rev-parse --verify "origin/$branch" >/dev/null 2>&1; then
             echo "$branch"
             return 0
         fi
@@ -26,7 +31,7 @@ detect_main_branch() {
 
     # Fallback: Check local branches
     for branch in main master trunk; do
-        if git rev-parse --verify "$branch" >/dev/null 2>&1; then
+        if git -C "${WORK_DIR}" rev-parse --verify "$branch" >/dev/null 2>&1; then
             echo "$branch"
             return 0
         fi
@@ -49,13 +54,13 @@ validate_commit() {
         return 1
     fi
 
-    if ! git rev-parse --verify "$commit_ref" >/dev/null 2>&1; then
+    if ! git -C "${WORK_DIR}" rev-parse --verify "$commit_ref" >/dev/null 2>&1; then
         echo "ERROR: Invalid commit reference: $commit_ref" >&2
         return 1
     fi
 
     # Return the full SHA
-    git rev-parse "$commit_ref"
+    git -C "${WORK_DIR}" rev-parse "$commit_ref"
     return 0
 }
 
@@ -74,7 +79,7 @@ get_changed_files() {
     case "$scope_type" in
         branch)
             # Compare branch against current HEAD
-            if ! git diff "$ref1...HEAD" --name-only 2>/dev/null; then
+            if ! git -C "${WORK_DIR}" diff "$ref1...HEAD" --name-only 2>/dev/null; then
                 echo "ERROR: Failed to get changed files for branch diff: $ref1...HEAD" >&2
                 return 1
             fi
@@ -82,7 +87,7 @@ get_changed_files() {
 
         commit)
             # Single commit - get files changed in that commit
-            if ! git diff-tree --no-commit-id --name-only -r "$ref1" 2>/dev/null; then
+            if ! git -C "${WORK_DIR}" diff-tree --no-commit-id --name-only -r "$ref1" 2>/dev/null; then
                 echo "ERROR: Failed to get changed files for commit: $ref1" >&2
                 return 1
             fi
@@ -94,7 +99,7 @@ get_changed_files() {
                 echo "ERROR: Commit range requires two references" >&2
                 return 1
             fi
-            if ! git diff "$ref1^..$ref2" --name-only 2>/dev/null; then
+            if ! git -C "${WORK_DIR}" diff "$ref1^..$ref2" --name-only 2>/dev/null; then
                 echo "ERROR: Failed to get changed files for range: $ref1^..$ref2" >&2
                 return 1
             fi
@@ -115,7 +120,7 @@ get_changed_files() {
                 # Get files for this commit and add to array
                 while IFS= read -r file; do
                     all_files+=("$file")
-                done < <(git diff-tree --no-commit-id --name-only -r "$commit" 2>/dev/null)
+                done < <(git -C "${WORK_DIR}" diff-tree --no-commit-id --name-only -r "$commit" 2>/dev/null)
             done
 
             # Deduplicate and output
@@ -146,7 +151,7 @@ get_diff_content() {
     case "$scope_type" in
         branch)
             # Compare branch against current HEAD
-            if ! git diff "$ref1...HEAD" 2>/dev/null; then
+            if ! git -C "${WORK_DIR}" diff "$ref1...HEAD" 2>/dev/null; then
                 echo "ERROR: Failed to get diff for branch: $ref1...HEAD" >&2
                 return 1
             fi
@@ -154,7 +159,7 @@ get_diff_content() {
 
         commit)
             # Single commit - show changes in that commit
-            if ! git show "$ref1" 2>/dev/null; then
+            if ! git -C "${WORK_DIR}" show "$ref1" 2>/dev/null; then
                 echo "ERROR: Failed to get diff for commit: $ref1" >&2
                 return 1
             fi
@@ -166,7 +171,7 @@ get_diff_content() {
                 echo "ERROR: Commit range requires two references" >&2
                 return 1
             fi
-            if ! git diff "$ref1^..$ref2" 2>/dev/null; then
+            if ! git -C "${WORK_DIR}" diff "$ref1^..$ref2" 2>/dev/null; then
                 echo "ERROR: Failed to get diff for range: $ref1^..$ref2" >&2
                 return 1
             fi
@@ -184,7 +189,7 @@ get_diff_content() {
                 fi
 
                 # Show changes for this commit
-                if ! git show "$commit" 2>/dev/null; then
+                if ! git -C "${WORK_DIR}" show "$commit" 2>/dev/null; then
                     echo "ERROR: Failed to get diff for commit: $commit" >&2
                     return 1
                 fi
@@ -230,7 +235,7 @@ parse_commit_range() {
 # Check if we're in a git repository
 # Exit code: 0 if in repo, 1 if not
 check_git_repo() {
-    if ! git rev-parse --git-dir >/dev/null 2>&1; then
+    if ! git -C "${WORK_DIR}" rev-parse --git-dir >/dev/null 2>&1; then
         echo "ERROR: Not in a git repository" >&2
         return 1
     fi
