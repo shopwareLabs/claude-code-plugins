@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.1.1] - 2025-11-01
+
+### Fixed
+- Fixed "BASH_SOURCE[0]: parameter not set" error in git-helpers.sh when sourcing script with set -u in complex command chains by using safe parameter expansion (${BASH_SOURCE[0]:-})
+
 ## [1.1.0] - 2025-10-30
 
 ### Added

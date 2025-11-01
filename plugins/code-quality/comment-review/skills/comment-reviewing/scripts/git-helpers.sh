@@ -243,7 +243,7 @@ check_git_repo() {
 }
 
 # Main entry point for testing (optional)
-if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+if [[ "${BASH_SOURCE[0]:-}" == "${0}" ]]; then
     echo "Git Helpers - Available Functions:"
     echo "  detect_main_branch"
     echo "  validate_commit <ref>"
